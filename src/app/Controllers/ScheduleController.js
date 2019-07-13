@@ -14,7 +14,6 @@ class ScheduleController {
     const { data } = req.query;
 
     const parseData = parseISO(data);
-    console.log(`${startOfDay(parseData)}+++++++${endOfDay(parseData)}`);
 
     const appointments = await Appointments.findAll({
       where: {

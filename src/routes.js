@@ -16,11 +16,20 @@ const routes = new Router();
 routes.post('/users', UserControllers.store);
 routes.post('/session', SessionControllers.store);
 routes.use(authMiddleware);
+
 routes.post('/appointment', AppointmentsControllers.store);
 routes.get('/appointment', AppointmentsControllers.index);
+routes.delete('/appointment/:id', AppointmentsControllers.delete);
+
 routes.put('/update', UserControllers.update);
+
 routes.get('/provider', ProviderController.index);
+routes.get('/providers/:providerId/available', ProviderController.available);
+
 routes.get('/schedule', ScheduleController.index);
+
 routes.get('/notifications', NotificationsController.index);
+routes.put('/notifications/:id', NotificationsController.update);
+
 routes.post('/files', upload.single('file'), FileController.store);
 export default routes;
