@@ -9,6 +9,11 @@ import Queue from '../../lib/Queue';
 import CancellationMail from '../jobs/CancellationMail';
 
 class AppointmentsControllers {
+  async teste(req, res) {
+    console.log('1');
+    return res.json('appointments');
+  }
+
   async index(req, res) {
     const { page = 1 } = req.query;
     const appointments = await Appointments.findAll({
@@ -16,7 +21,7 @@ class AppointmentsControllers {
       order: ['data'],
       limit: 20,
       offset: (page - 1) * 20,
-      attributes: ['id', 'data'],
+      attributes: ['id', 'data', 'past', 'canceleble'],
       include: [
         {
           model: User,
