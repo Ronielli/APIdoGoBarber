@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 import User from '../models/User';
+import file from '../models/File';
 import authConfig from '../../config/auth';
 
 class SessionControllers {
@@ -15,7 +16,16 @@ class SessionControllers {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+      include: [
+        {
+          model: file,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
 
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
@@ -23,12 +33,14 @@ class SessionControllers {
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ error: 'Passoword does not match' });
     }
-    const { id, nome } = user;
+    const { id, nome, avatar, provider } = user;
 
     return res.json({
       id,
       nome,
       email,
+      avatar,
+      provider,
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),
